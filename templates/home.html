@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<!-- Hero slider -->
+<section id="heroSlider" class="carousel slide carousel-fade rs-slider" data-bs-ride="carousel" data-bs-interval="5000">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    {% for tag, h1, h2, h3, p in [
+      ('🩸 Connecting donors with patients','Need Blood?','Find a Donor.','Save a Life.','RaktSetu helps you search blood donors by blood group and city, post urgent requests, and reach people who are ready to help.'),
+      ('❤️ Every drop counts','One Donation.','Up To Three','Lives Saved.','A single blood donation takes about 15 minutes and can help up to three patients. Become a donor today.'),
+      ('🚨 Emergency? Act fast','Post A Request.','Reach Donors.','In Minutes.','Share the patient, hospital and urgency. Donors and volunteers can see it and call you directly.') ] %}
+    <div class="carousel-item {{ 'active' if loop.first }} rs-s{{ loop.index }}">
+      <div class="container rs-slide-in">
+        <span class="rs-tag">{{ tag }}</span>
+        <h1 class="display-3 mt-3">{{ h1 }}<br><span class="text-gold">{{ h2 }}</span><br>{{ h3 }}</h1>
+        <p class="lead text-secondary my-4 col-lg-7 px-0">{{ p }}</p>
+        <a class="btn btn-rs btn-lg me-2 mb-2" href="{{ url_for('find') }}">Find a Donor</a>
+        <a class="btn btn-outline-light btn-lg mb-2" href="{{ url_for('register') }}">Register as Donor</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <button class="carousel-control-prev rs-arrow" type="button" data-bs-target="#heroSlider" data-bs-slide="prev" aria-label="Previous"><span>‹</span></button>
+  <button class="carousel-control-next rs-arrow" type="button" data-bs-target="#heroSlider" data-bs-slide="next" aria-label="Next"><span>›</span></button>
+</section>
+
+<!-- Search card -->
+<section class="rs-cream-top" data-bs-theme="light">
+  <div class="container">
+    {% with msgs = get_flashed_messages(with_categories=true) %}{% for cat, m in msgs %}<div class="alert alert-{{ cat }}">{{ m }}</div>{% endfor %}{% endwith %}
+    <form class="rs-search" method="get" action="{{ url_for('find') }}">
+      <div class="rs-field"><label for="hbg">Blood group needed</label>
+        <select id="hbg" name="bg"><option value="">Any blood group</option>{% for b in BLOOD_GROUPS %}<option>{{ b }}</option>{% endfor %}</select></div>
+      <div class="rs-field"><label for="hcity">Your location</label>
+        <input id="hcity" name="city" list="cities" placeholder="Enter city or location..."></div>
+      <button class="rs-search-btn" type="submit">🔎 Find Donors</button>
+    </form>
+  </div>
+</section>
+
+<!-- Explore by blood group -->
+<section class="rs-cream" data-bs-theme="light">
+  <div class="container text-center">
+    <div class="rs-eyebrow">Explore by blood group</div>
+    <h2 class="rs-dark-h">Find The Right Match, Fast</h2>
+    <p class="text-secondary mb-5">Tap a blood group to see registered donors in that group.</p>
+    <div class="row g-3 text-start">
+      {% for b in BLOOD_GROUPS %}
+      <div class="col-6 col-md-3">
+        <a class="rs-gcard g{{ loop.index0 % 4 }}" href="{{ url_for('find', bg=b) }}">
+          <span class="rs-gbig">{{ b }}</span>
+          <span class="rs-gname">{{ stats.per_group[b] }} donor{{ '' if stats.per_group[b]==1 else 's' }}</span>
+          <span class="rs-gsub">Compatible donors nearby</span>
+          <span class="rs-gex">Explore →</span>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Why RaktSetu -->
+<section class="rs-navy">
+  <div class="container text-center">
+    <div class="rs-eyebrow">Why RaktSetu</div>
+    <h2>A Smarter Way To Find Blood Donors</h2>
+    <p class="text-secondary mb-5">Built to make donor-to-patient connection simple, quick and private.</p>
+    <div class="row g-3 text-start">
+      {% for ic, t, p in [('📍','Location-Based Matching','Search by city and blood group to find donors close to the hospital.'),('🚨','Urgent Requests','Post Normal, Urgent or Emergency requests and get seen first.'),('🔒','Privacy First','Phone numbers stay hidden until someone confirms they need blood.'),('⏳','Safe Donation Gap','Donors are marked unavailable for 90 days after a donation.')] %}
+      <div class="col-md-6 col-lg-3"><div class="rs-feat"><span class="rs-ico">{{ ic }}</span><h5>{{ t }}</h5><p class="text-secondary mb-0 small">{{ p }}</p></div></div>
+      {% endfor %}
+    </div>
+    <div class="mt-5 text-start">{% include "_stats.html" %}</div>
+  </div>
+</section>
+
+<!-- Awareness -->
+<section class="rs-cream" data-bs-theme="light">
+  <div class="container text-center">
+    <div class="rs-eyebrow">Blood donation awareness</div>
+    <h2 class="rs-dark-h">Why Blood Donation Matters</h2>
+    <p class="text-secondary mb-5">Blood cannot be made in a lab. It only comes from donors.</p>
+    <div class="row g-3 text-start">
+      {% for t, p in [('Every 2 seconds','Someone in the world needs blood, for surgery, accidents, cancer care or childbirth.'),('Safe and quick','Donating takes about 10 to 15 minutes. Your body replaces the blood within weeks.'),('You can donate often','Healthy adults aged 18 to 65 can donate whole blood every 3 months.')] %}
+      <div class="col-md-4"><div class="rs-lcard"><h5>{{ t }}</h5><p class="text-secondary mb-0">{{ p }}</p></div></div>
+      {% endfor %}
+    </div>
+    <a class="btn btn-rs btn-lg mt-5" href="{{ url_for('register') }}">Become a Donor</a>
+  </div>
+</section>
+{% endblock %}

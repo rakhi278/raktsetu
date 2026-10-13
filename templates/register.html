@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Register as Donor{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width:820px">
+  <h2>Register as a donor</h2>
+  <p class="text-secondary">Your phone number and email stay hidden. The phone number is shown only when someone confirms they need blood.</p>
+  <form method="post" class="row g-3 needs-validation" novalidate>
+    <div class="col-md-6"><label class="form-label">Full name</label><input class="form-control" name="name" required minlength="3" value="{{ f.get('name','') }}"></div>
+    <div class="col-md-6"><label class="form-label">Age</label><input class="form-control" name="age" type="number" min="18" max="65" required value="{{ f.get('age','') }}"></div>
+    <div class="col-md-6"><label class="form-label">Gender</label>
+      <select class="form-select" name="gender" required>{% for g in ['Male','Female','Other'] %}<option {{ 'selected' if f.get('gender')==g }}>{{ g }}</option>{% endfor %}</select></div>
+    <div class="col-md-6"><label class="form-label">Blood group</label>
+      <select class="form-select" name="bg" required><option value="">Select</option>{% for b in BLOOD_GROUPS %}<option {{ 'selected' if f.get('bg')==b }}>{{ b }}</option>{% endfor %}</select></div>
+    <div class="col-md-6"><label class="form-label">Phone number</label><input class="form-control" name="phone" type="tel" pattern="[0-9]{10}" placeholder="10 digit number" required value="{{ f.get('phone','') }}"></div>
+    <div class="col-md-6"><label class="form-label">City / location</label><input class="form-control" name="city" list="cities" required value="{{ f.get('city','') }}"></div>
+    <div class="col-md-6"><label class="form-label">Email</label><input class="form-control" name="email" type="email" required value="{{ f.get('email','') }}"></div>
+    <div class="col-md-6"><label class="form-label">Last donation date</label><input class="form-control" name="last_donation" type="date" value="{{ f.get('last_donation','') }}"></div>
+    <div class="col-12"><label class="form-label">Availability</label>
+      <select class="form-select" name="available"><option value="1" {{ 'selected' if f.get('available','1')=='1' }}>Available to donate</option><option value="0" {{ 'selected' if f.get('available')=='0' }}>Not available right now</option></select></div>
+    <div class="col-12"><button class="btn btn-rs" type="submit">Register as Donor</button></div>
+  </form>
+</div>
+{% endblock %}

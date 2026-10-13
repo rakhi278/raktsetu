@@ -1,0 +1,5 @@
+<div class="row g-3">
+  {% for n, label in [(stats.donors,'Registered donors'),(stats.requests,'Total blood requests'),(stats.connections,'Successful connections'),(stats.groups_available ~ ' / 8','Blood groups available')] %}
+  <div class="col-6 col-lg-3"><div class="card rs-card h-100"><div class="card-body"><div class="rs-num">{{ n }}</div><div class="text-secondary small">{{ label }}</div></div></div></div>
+  {% endfor %}
+</div>

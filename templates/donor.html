@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ d.name }}{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width:560px">
+  <a class="text-secondary text-decoration-none" href="{{ url_for('find') }}">← Back to search</a>
+  <div class="card rs-card mt-3"><div class="card-body">
+    <div class="d-flex align-items-center gap-3 mb-3">
+      <span class="rs-bg rs-bg-lg">{{ d.bg }}</span>
+      <div><h3 class="mb-0">{{ d.name }}</h3><div class="text-secondary">{{ d.gender }}, {{ d.age }} years</div></div>
+    </div>
+    <p class="mb-2"><strong>Location:</strong> {{ d.city }}</p>
+    <p class="mb-2"><strong>Status:</strong> <span class="badge {{ 'text-bg-success' if d.is_available else 'text-bg-secondary' }}">{{ 'Available' if d.is_available else 'Not available' }}</span></p>
+    <p><strong>Last donation:</strong> {{ d.last_donation or 'Never donated' }}</p>
+    <button class="btn btn-rs contact-btn" data-id="{{ d.id }}" data-name="{{ d.name }}" data-mask="{{ d.masked_phone }}">Contact donor</button>
+  </div></div>
+</div>
+{% endblock %}

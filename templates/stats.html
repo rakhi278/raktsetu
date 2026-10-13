@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Statistics{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2>Statistics</h2>
+  <p class="text-secondary">A live summary of everything on RaktSetu.</p>
+  {% include "_stats.html" %}
+  <div class="card rs-card mt-4"><div class="card-body">
+    <h5 class="mb-3">Donors by blood group</h5>
+    {% set mx = [stats.per_group.values()|max, 1]|max %}
+    {% for b, n in stats.per_group.items() %}
+    <div class="d-flex align-items-center gap-3 my-2">
+      <strong style="width:40px">{{ b }}</strong>
+      <div class="progress flex-grow-1" style="height:12px"><div class="progress-bar rs-progress" style="width:{{ n / mx * 100 }}%"></div></div>
+      <span class="text-secondary" style="width:24px">{{ n }}</span>
+    </div>
+    {% endfor %}
+  </div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Find Donor{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2>Find a blood donor</h2>
+  <p class="text-secondary">Choose a blood group and city to see donors who can help.</p>
+  <form class="row g-3 align-items-end mb-4" method="get" action="{{ url_for('find') }}">
+    <div class="col-sm-4 col-md-3"><label class="form-label" for="bg">Blood group</label>
+      <select class="form-select" id="bg" name="bg"><option value="">All groups</option>{% for b in BLOOD_GROUPS %}<option {{ 'selected' if b==bg }}>{{ b }}</option>{% endfor %}</select></div>
+    <div class="col-sm-5 col-md-4"><label class="form-label" for="city">City</label>
+      <input class="form-control" id="city" name="city" list="cities" placeholder="Any city" value="{{ city }}"></div>
+    <div class="col-auto"><button class="btn btn-rs" type="submit">Search</button></div>
+  </form>
+  <p class="text-secondary small">{{ donors|length }} donor(s) found</p>
+  <div class="row g-3">
+    {% for d in donors %}
+    <div class="col-md-6 col-lg-4"><div class="card rs-card h-100"><div class="card-body">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <span class="rs-bg">{{ d.bg }}</span>
+        <div><h5 class="mb-0">{{ d.name }}</h5><div class="text-secondary small">{{ d.city }} · {{ d.gender }}, {{ d.age }} yrs</div></div>
+      </div>
+      <span class="badge {{ 'text-bg-success' if d.is_available else 'text-bg-secondary' }}">{{ 'Available' if d.is_available else 'Not available' }}</span>
+      <div class="mt-3 d-flex gap-2">
+        <a class="btn btn-outline-light btn-sm" href="{{ url_for('donor_profile', did=d.id) }}">View profile</a>
+        <button class="btn btn-rs btn-sm contact-btn" data-id="{{ d.id }}" data-name="{{ d.name }}" data-mask="{{ d.masked_phone }}">Contact</button>
+      </div>
+    </div></div></div>
+    {% else %}
+    <div class="col-12"><div class="rs-empty">No donors found. Try another city or blood group, or <a href="{{ url_for('request_blood') }}">post a blood request</a>.</div></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
